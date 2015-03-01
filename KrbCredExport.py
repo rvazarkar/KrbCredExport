@@ -250,9 +250,8 @@ if __name__ == "__main__":
         #   Primary Principal Name
         # }
         pnametag = b""
-        pnametag += ticket_data.principal_components[0]
-        pnametag = prepend(pnametag, chr(len(pnametag)))
-        pnametag = prepend(pnametag, '\x1B')
+        for s in ticket_data.principal_components:
+            pnametag += '\x1B' + chr(len(s)) + s
         pnametag = prepend(pnametag, chr(len(pnametag)))
         pnametag = prepend(pnametag, seqtag)
         pnametag = prepend(pnametag, chr(len(pnametag)))
