@@ -266,11 +266,11 @@ if __name__ == "__main__":
         # tktflags{
         #   0xA3 LB
         #   0x03 LB
-        #   uint32 Ticket Flags
         #   0x00 (I have no idea where this byte came from!)
+        #   uint32 Ticket Flags
         # }
-        flags = b"\x00"
-        flags = prepend(flags,struct.pack(">I",ticket_data.ticket_flags))
+        flags = b""
+        flags = prepend(flags,'\x00' + struct.pack("I",ticket_data.ticket_flags))
         flags = prepend(flags, chr(len(flags)))
         flags = prepend(flags, '\x03')
         flags = prepend(flags, chr(len(flags)))
