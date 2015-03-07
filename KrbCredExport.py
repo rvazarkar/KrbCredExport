@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import krbcredstructs
 import ccachestructs
 import sys
