@@ -41,7 +41,7 @@ if __name__ == "__main__":
             krbcredinfo.sname.server_name_type = credential.server.name_type
             krbcredinfo.createkrbcrdinfo()
 
-            with open(sys.argv[2],'wb') as o:
+            with open(sys.argv[2], 'wb') as o:
                 o.write(KrbCred.tostring())
             sys.exit(0)
 
@@ -62,19 +62,19 @@ if __name__ == "__main__":
             header.header.tag = 0x01
             header.header.taglen = 0x08
             KrbCredInfo = KrbCred.ticketpart.encpart.krbcredinfo
-            
+
             primary_principal.name_type = KrbCredInfo.pname.principal_name_type
             primary_principal.components = KrbCredInfo.pname.principal_components
             primary_principal.num_components = len(primary_principal.components)
             primary_principal.realm.data = KrbCredInfo.prealm.principal_realm
             primary_principal.realm.length = len(primary_principal.realm.data)
-            
+
             credential.client.name_type = KrbCredInfo.pname.principal_name_type
             credential.client.components = KrbCredInfo.pname.principal_components
             credential.client.num_components = len(credential.client.components)
             credential.client.realm.data = KrbCredInfo.prealm.principal_realm
             credential.client.realm.length = len(credential.client.realm.data)
-            
+
             credential.server.name_type = KrbCredInfo.sname.server_name_type
             credential.server.components = KrbCredInfo.sname.server_components
             credential.server.num_components = len(credential.server.components)
@@ -107,7 +107,7 @@ if __name__ == "__main__":
             credential.secondticket.length = 0
             credential.secondticket.data = ''
 
-            with open(sys.argv[2],'wb') as o:
+            with open(sys.argv[2], 'wb') as o:
                 o.write(header.tostring())
                 o.write(primary_principal.tostring())
                 o.write(credential.tostring())

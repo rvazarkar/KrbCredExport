@@ -1,10 +1,13 @@
 import struct
 
 
+# LB is a single byte representing the length of the rest of the section
+# LT is a 3 byte structure consisting of the byte 82 followed by 2 bytes representing the length of the rest of the file
+
 # header{
 #   uint16 tag
 #   uint16 taglen
-#   uint8[taglen] tagdata   
+#   uint8[taglen] tagdata
 # }
 class Header:
     def __init__(self):
@@ -25,7 +28,7 @@ class Header:
 
 # deltatime{
 #   uint32 time_offset
-#   uint32 usec_offset  
+#   uint32 usec_offset
 # }
 class DeltaTime:
     def __init__(self):
@@ -69,7 +72,7 @@ class CCacheHeader:
 #   uint32 authtime
 #   uint32 starttime
 #   uint32 endtime
-#   uint32 renew_till    
+#   uint32 renew_till
 # }
 class KerbTimes:
     def __init__(self):
@@ -87,7 +90,7 @@ class KerbTimes:
 
 # counted_octet{
 #   uint32 length
-#   uint8[char] data    
+#   uint8[char] data
 # }
 class CountedOctet:
     def __init__(self):
@@ -109,7 +112,7 @@ class CountedOctet:
 #   uint16 keytype
 #   uint16 etype
 #   uint16 keylen
-#   uint8[keylen] key       
+#   uint8[keylen] key
 # }
 class Keyblock:
     def __init__(self):
@@ -133,7 +136,7 @@ class Keyblock:
 #   uint32 name_type
 #   uint32 num_components
 #   counted_octet realm
-#   counted_octet[num_components] components    
+#   counted_octet[num_components] components
 # }
 class Principal:
     def __init__(self):
@@ -162,7 +165,7 @@ class Principal:
 
 # address{
 #   uint16 address_type
-#   counted_octet address    
+#   counted_octet address
 # }
 class Address:
     def __init__(self):
@@ -182,7 +185,7 @@ class Address:
 
 # authdata{
 #   uint16 authtype
-#   counted_octet authdata    
+#   counted_octet authdata
 # }
 class AuthData:
     def __init__(self):
@@ -212,7 +215,7 @@ class AuthData:
 #   uint32 num_authdata
 #   authdata[num_authdata] auths
 #   counted_octet ticket_1
-#   counted_octet ticket_2 (nothing here in what I've seen)       
+#   counted_octet ticket_2 (nothing here in what I've seen)
 # }
 class Credential:
     def __init__(self):

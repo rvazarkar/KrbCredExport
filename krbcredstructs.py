@@ -1,6 +1,10 @@
 import struct
 import krbcredinfostructs as kc
 
+
+# LB is a single byte representing the length of the rest of the section
+# LT is a 3 byte structure consisting of the byte 82 followed by 2 bytes representing the length of the rest of the file
+
 def p(a, b):
     return b + a
 
@@ -13,25 +17,25 @@ def p(a, b):
 #   0x04 LT
 # }
 class EncPart:
-	def __init__(self):
-		self.krbcredinfo = kc.KrbCredInfo()
-		self.etype = None
+    def __init__(self):
+        self.krbcredinfo = kc.KrbCredInfo()
+        self.etype = None
 
-	def parsefile(self, f):
-		f.read(4)
-		self.etype, = struct.unpack(">B", f.read(1))
-		f.read(8)
-		self.krbcredinfo.parsefile(f)
+    def parsefile(self, f):
+        f.read(4)
+        self.etype, = struct.unpack(">B", f.read(1))
+        f.read(8)
+        self.krbcredinfo.parsefile(f)
 
-	def tostring(self):
-		r = self.krbcredinfo.tostring()
-		r = p(r, struct.pack(">H", len(r)))
-		r = p(r, '\x04\x82')
-		r = p(r, struct.pack(">H", len(r)))
-		r = p(r, '\xA2\x82')
-		r = p(r, chr(self.etype))
-		r = p(r, '\xA0\x03\x02\x01')
-		return r
+    def tostring(self):
+        r = self.krbcredinfo.tostring()
+        r = p(r, struct.pack(">H", len(r)))
+        r = p(r, '\x04\x82')
+        r = p(r, struct.pack(">H", len(r)))
+        r = p(r, '\xA2\x82')
+        r = p(r, chr(self.etype))
+        r = p(r, '\xA0\x03\x02\x01')
+        return r
 
 
 # This section represents the tickets section of the overall KrbCred
@@ -45,29 +49,29 @@ class EncPart:
 #   0x30 LT
 # }
 class TicketPart:
-	def __init__(self):
-		self.ticket = None
-		self.encpart = EncPart()
+    def __init__(self):
+        self.ticket = None
+        self.encpart = EncPart()
 
-	def parsefile(self, f):
-		f.read(6)
-		ticketlen, = struct.unpack(">H", f.read(2))
-		self.ticket, = struct.unpack(">%ds" % ticketlen, f.read(ticketlen))
-		f.read(8)
-		self.encpart.parsefile(f)
+    def parsefile(self, f):
+        f.read(6)
+        ticketlen, = struct.unpack(">H", f.read(2))
+        self.ticket, = struct.unpack(">%ds" % ticketlen, f.read(ticketlen))
+        f.read(8)
+        self.encpart.parsefile(f)
 
-	def tostring(self):
-		r = self.encpart.tostring()
-		r = p(r, struct.pack(">H", len(r)))
-		r = p(r, '\x30\x82')
-		r = p(r, struct.pack(">H", len(r)))
-		r = p(r, '\xA3\x82')
-		r = p(r, self.ticket)
-		r = p(r, struct.pack(">H", len(self.ticket)))
-		r = p(r, '\x30\x82')
-		r = p(r, struct.pack(">H", len(self.ticket) + 4))
-		r = p(r, '\xA2\x82')
-		return r
+    def tostring(self):
+        r = self.encpart.tostring()
+        r = p(r, struct.pack(">H", len(r)))
+        r = p(r, '\x30\x82')
+        r = p(r, struct.pack(">H", len(r)))
+        r = p(r, '\xA3\x82')
+        r = p(r, self.ticket)
+        r = p(r, struct.pack(">H", len(self.ticket)))
+        r = p(r, '\x30\x82')
+        r = p(r, struct.pack(">H", len(self.ticket) + 4))
+        r = p(r, '\xA2\x82')
+        return r
 
 
 # This is the header for the kerberos ticket, and the final section
@@ -80,19 +84,19 @@ class TicketPart:
 #   uint8 msg-type (Always 0x16 for krbcred)
 # }
 class KrbCredHeader:
-	def __init__(self):
-		self.ticketpart = TicketPart()
+    def __init__(self):
+        self.ticketpart = TicketPart()
 
-	def parsefile(self, f):
-		f.read(18)
-		self.ticketpart.parsefile(f)
+    def parsefile(self, f):
+        f.read(18)
+        self.ticketpart.parsefile(f)
 
-	def tostring(self):
-		r = self.ticketpart.tostring()
-		r = p(r, '\xA1\x03\x02\x01\x16')
-		r = p(r, '\xA0\x03\x02\x01\x05')
-		r = p(r, struct.pack(">H", len(r)))
-		r = p(r, '\x30\x82')
-		r = p(r, struct.pack(">H", len(r)))
-		r = p(r, '\x76\x82')
-		return r
+    def tostring(self):
+        r = self.ticketpart.tostring()
+        r = p(r, '\xA1\x03\x02\x01\x16')
+        r = p(r, '\xA0\x03\x02\x01\x05')
+        r = p(r, struct.pack(">H", len(r)))
+        r = p(r, '\x30\x82')
+        r = p(r, struct.pack(">H", len(r)))
+        r = p(r, '\x76\x82')
+        return r

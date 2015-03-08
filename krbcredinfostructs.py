@@ -12,6 +12,10 @@ def clen(s):
     return chr(len(s))
 
 
+# LB is a single byte representing the length of the rest of the section
+# LT is a 3 byte structure consisting of the byte 82 followed by 2 bytes representing the length of the rest of the file
+
+
 # key{
 #   0xA0 LB
 #   0x30 LB
@@ -20,7 +24,7 @@ def clen(s):
 #   0xA1 LB
 #   0x03 LB
 #   keydata
-#}
+# }
 class Key:
 
     def __init__(self):
@@ -55,7 +59,7 @@ class Key:
 #   0xA1 LB
 #   0x1B LB
 #   Primary Principal Realm
-#}
+# }
 class PRealm:
 
     def __init__(self):
@@ -153,7 +157,7 @@ class TicketFlags:
 # Timestamp format is YYYYmmddHHMMSSZ and must be UTC!
 # 0xA5 is starttime, 0xA6 is endtime, 0xA7 is renew_till
 # time{
-#	uint8 Identifier
+#   uint8 Identifier
 #   LB (Always 0x11)
 #   0x18 LB (Always 0x0F)
 #   start_time
@@ -308,21 +312,21 @@ class KrbCredInfo:
             self.sname.tostring()
 
     def tostring(self):
-    	r = self.krbcredinfo
-    	r = p(r, struct.pack(">H",len(r)))
-    	r = p(r, '\x30\x82')
-    	r = p(r, struct.pack(">H",len(r)))
-    	r = p(r, '\x30\x82')
-    	r = p(r, struct.pack(">H",len(r)))
-    	r = p(r, '\xA0\x82')
-    	r = p(r, struct.pack(">H",len(r)))
-    	r = p(r, '\x30\x82')
-    	r = p(r, struct.pack(">H",len(r)))
-    	r = p(r, '\x7D\x82')
+        r = self.krbcredinfo
+        r = p(r, struct.pack(">H", len(r)))
+        r = p(r, '\x30\x82')
+        r = p(r, struct.pack(">H", len(r)))
+        r = p(r, '\x30\x82')
+        r = p(r, struct.pack(">H", len(r)))
+        r = p(r, '\xA0\x82')
+        r = p(r, struct.pack(">H", len(r)))
+        r = p(r, '\x30\x82')
+        r = p(r, struct.pack(">H", len(r)))
+        r = p(r, '\x7D\x82')
         return r
 
     def createkrbcrdinfo(self):
-    	self.krbcredinfo = self.key.tostring() + self.prealm.tostring() + self.pname.tostring() + self.flags.tostring() + \
+        self.krbcredinfo = self.key.tostring() + self.prealm.tostring() + self.pname.tostring() + self.flags.tostring() + \
             self.starttime.tostring() + self.endtime.tostring() + \
             self.renew_till.tostring() + self.srealm.tostring() + \
             self.sname.tostring()
